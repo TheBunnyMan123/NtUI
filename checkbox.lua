@@ -12,7 +12,7 @@ local texture = textures["NtUI.theme"]
 ---@field _pos Vector2
 ---@field _size Vector2
 ---@field parentPos Vector2
----@field events {PRESSED: Event}
+---@field events {TOGGLED: Event}
 ---@field nineslice NtUI.Nineslice
 ---@field children NtUI.Drawable[]
 ---@field check SpriteTask
@@ -44,7 +44,7 @@ function checkbox.new(pos, z_index, checked)
    new._size = vec(9, 9)
 
    new.events = eventlib.newEvents()
-   new.events.PRESSED = eventlib.newEvent()
+   new.events.TOGGLED = eventlib.newEvent()
    new.check = model:newSprite(tostring(spriteIter)):setTexture(texture, texture:getDimensions():unpack()):uvPixels(0, 16):region(5, 5):size(5, 5):setVisible(checked)
    new.children = {new.label}
    new.parentPos = vec(0, 0)
@@ -107,7 +107,7 @@ function events.RENDER()
       end
       if not v.held then
          v.checked = not v.checked
-         v.events.PRESSED:fire()
+         v.events.TOGGLED:fire()
          v.held = true
       end
       v.key = k
