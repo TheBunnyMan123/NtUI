@@ -56,24 +56,24 @@ local eventsMetatable = mkReadOnly {
    __table = {},
    __newindex = function(self, index, value)
       if type(index) == "string" and type(value) == "function" and getmetatable(self).__table[index:upper()] and type(getmetatable(self).__table[index:upper()]) == "Event" then
-         getmetatable(self).__table[index]:register(value)
+         self.__table[index]:register(value)
       elseif type(value) == "Event" then
-         getmetatable(self).__table[index:upper()] = value
+         self.__table[index:upper()] = value
       else
-         rawset(getmetatable(self).__table, index, value)
+         self.__table[index] = value
       end
    end,
    __index = function(self, key)
-      return getmetatable(self).__table[key]
+      return self.__table[key]
    end,
    __pairs = function(self)
-      return pairs(getmetatable(self).__table)
+      return pairs(self.__table)
    end,
    __ipairs = function(self)
-      return ipairs(getmetatable(self).__table)
+      return ipairs(self.__table)
    end,
    __len = function(self)
-      return #getmetatable(self).__table
+      return #self.__table
    end,
    __type = "EventsAPI"
 }
@@ -85,7 +85,7 @@ function lib.newEvent()
 end
 
 function lib.newEvents()
-   return setmetatable({}, eventsMetatable)
+   return setmetatable({__table = {}}, eventsMetatable)
 end
 lib.newEventsAPI = lib.newEvents
 
